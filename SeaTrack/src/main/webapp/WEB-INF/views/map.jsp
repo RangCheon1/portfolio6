@@ -192,18 +192,34 @@
     map.getPane('topMarkers').style.pointerEvents = 'auto'; // 클릭 가능하도록 설정
     
     ports.forEach(port => {
-    	L.circleMarker([port.lat, port.lng], {
-    		  radius: 5,
-    		  color: 'red',
-    		  fillColor: 'red',
-    		  fillOpacity: 0.8,
-    		  pane: 'topMarkers' 
-    		}).bindTooltip(port.name, { permanent: false, direction: 'top' })
-    		  .on('click', () => {
-    		    alert("항만명: " + port.name);
-    		  })
-    		  .addTo(map);
+    	  const customIcon = L.icon({
+    	    iconUrl: '${pageContext.request.contextPath}/resources/image/ship.png', // 사용할 이미지 경로
+    	    iconSize: [25, 41], // 이미지 크기 [가로, 세로]
+    	    iconAnchor: [12, 41], // 마커의 기준점 (이미지 아래 중앙)
+    	    popupAnchor: [0, -41], // 툴팁 위치 조정
+    	  });
+
+    	  L.marker([port.lat, port.lng], { icon: customIcon })
+    	    .bindTooltip(port.name, { permanent: false, direction: 'top' })
+    	    .on('click', () => {
+    	      alert("항만명: " + port.name);
+    	    })
+    	    .addTo(map);
     	});
+    
+	  const customIcon2 = L.icon({
+  	    iconUrl: '${pageContext.request.contextPath}/resources/image/naver.png', // 사용할 이미지 경로
+  	    iconSize: [25, 41], // 이미지 크기 [가로, 세로]
+  	    iconAnchor: [12, 41], // 마커의 기준점 (이미지 아래 중앙)
+  	    popupAnchor: [0, -41], // 툴팁 위치 조정
+  	  });
+
+  	  L.marker([34.683333, 126.250000], { icon: customIcon2 })
+  	    .bindTooltip("test", { permanent: false, direction: 'top' })
+  	    .on('click', () => {
+  	      alert("test");
+  	    })
+  	    .addTo(map);
   </script>
 </body>
 </html>

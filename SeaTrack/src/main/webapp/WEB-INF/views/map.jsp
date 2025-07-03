@@ -47,8 +47,8 @@
       minZoom: 8,
       attribution: '&copy; <a href="http://www.vworld.kr/">VWorld</a>'
     }).addTo(map);
+    
     let coastPolygons;
-
     let exceptionPolygons;
 
     $.getJSON('${pageContext.request.contextPath}/resources/static/korea_sea_polygon.geojson', seaData => {
@@ -57,13 +57,13 @@
       }).addTo(map);
 
       // 예외 영역도 로드
-      $.getJSON('${pageContext.request.contextPath}/resources/static/exception_area.geojson', exceptionData => {
-        exceptionPolygons = L.geoJSON(exceptionData, {
-          style: { opacity:0, fillOpacity: 0 } 
-        }).addTo(map);
+    $.getJSON('${pageContext.request.contextPath}/resources/static/exception_area.geojson', exceptionData => {
+      exceptionPolygons = L.geoJSON(exceptionData, {
+        style: { opacity:0, fillOpacity: 0 } 
+      }).addTo(map);
         
-        drawSeaGrid(); // 모든 polygon이 준비된 후 그리드 그리기
-      });
+      drawSeaGrid(); // 모든 polygon이 준비된 후 그리드 그리기
+    });
     });
      
 
@@ -98,9 +98,9 @@
     	  }
     	}
     
-    map.on('click', function(e) {
+    /* map.on('click', function(e) {
     	  alert("클릭 위치\n위도: " + e.latlng.lat.toFixed(6) + "\n경도: " + e.latlng.lng.toFixed(6));
-    	});
+    	}); */
     
     $('#toggleGridBtn').on('click', function() {
     	  if (gridVisible) {
@@ -115,9 +115,9 @@
   	
     
     const ports = [
-    	{ name: "부산항", lat: 35.101944, lng: 129.040278 },       // 부산항 중심
-    	  { name: "경인항", lat: 37.558935, lng: 126.603656 },          // 인천-경기지역 통합경인항 위치 수정
-    	  { name: "인천항", lat: 37.4644, lng: 126.6172 },          // 인천항
+    	{ name: "부산항", lat: 35.101944, lng: 129.040278 },     
+    	  { name: "경인항", lat: 37.558935, lng: 126.603656 },          
+    	  { name: "인천항", lat: 37.4644, lng: 126.6172 },          
     	  { name: "여수항", lat: 34.744663, lng: 127.751598 },
     	  { name: "마산항", lat: 35.1983, lng: 128.5778 },
     	  { name: "동해묵호항", lat: 37.549103, lng: 129.112573 },
@@ -197,7 +197,7 @@
     		  color: 'red',
     		  fillColor: 'red',
     		  fillOpacity: 0.8,
-    		  pane: 'topMarkers' // 여기에 pane 지정
+    		  pane: 'topMarkers' 
     		}).bindTooltip(port.name, { permanent: false, direction: 'top' })
     		  .on('click', () => {
     		    alert("항만명: " + port.name);

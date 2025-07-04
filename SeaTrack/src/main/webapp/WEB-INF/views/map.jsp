@@ -14,6 +14,9 @@
     href="https://unpkg.com/leaflet/dist/leaflet.css"
   />
   <style>
+  	body{
+  	margin:0;
+  	}
     #map {
       height: 100vh;
       width: 100%;
@@ -29,6 +32,25 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-pip/leaflet-pip.min.js"></script>
   <script>
+  
+  // 임시 pointData 
+  const pointData = [
+	  { lat: 36.302537, lng: 126.358910 },
+	  { lat: 36.302538, lng: 126.358910 },
+	  { lat: 36.302537, lng: 126.358913 },
+	  { lat: 36.299908, lng: 126.394958 },
+	  { lat: 36.299908, lng: 126.394958 },
+	  { lat: 36.265037, lng: 126.393757 },
+	  { lat: 36.262131, lng: 126.358309 },
+	  { lat: 36.262131, lng: 126.358309 },
+	  { lat: 36.262131, lng: 126.358309 },
+	  { lat: 36.262131, lng: 126.358309 }
+	];
+  
+  
+  
+  
+  
     // 지도 초기화 (대한민국 중심)
     const bounds = L.latLngBounds([32.5, 122.5], [38.7, 132.0]);
 
@@ -41,7 +63,7 @@
     let gridLayerGroup = L.layerGroup().addTo(map);
     let gridVisible = true;
 
-    // 타일 레이어 추가 (OpenStreetMap)
+    // 타일 레이어 추가 
     L.tileLayer('https://xdworld.vworld.kr/2d/Base/service/{z}/{x}/{y}.png', {
       maxZoom: 16,
       minZoom: 8,
@@ -79,18 +101,27 @@
     	      const inSea = leafletPip.pointInLayer(point, coastPolygons).length > 0;
     	      const inException = leafletPip.pointInLayer(point, exceptionPolygons).length > 0;
 
-    	      // 해역에 포함되었지만 예외 구역에 포함되면 격자 허용
-    	      if (inSea && !inException) {
-    	        continue; // 여전히 일반 해역이라서 그리지 않음
-    	      }
+    	      if (inSea && !inException) continue;
 
-    	      // 예외에 포함되었거나 완전히 해역 외부이면 격자 그리기
+    	      // 격자에 포함된 pointData의 좌표 개수 계산
+    	      const count = pointData.filter(p =>
+    	        p.lat >= lat && p.lat < lat + gridSize &&
+    	        p.lng >= lng && p.lng < lng + gridSize
+    	      ).length;
+
+    	      // ✅ 좌표 개수에 따른 색상 결정
+    	      let fillColor = 'none'; // 기본 투명
+    	      if (count === 1) fillColor = "rgb(101, 211, 67)"; // 초록
+    	      else if (count === 2) fillColor = "rgb(235, 255, 51)"; //노랑
+    	      else if (count === 3) fillColor = "#ffb74d"; // 주황
+    	      else if (count >= 4) fillColor = "#e57373";// 빨강
+
     	      const rect = L.rectangle([[lat, lng], [lat + gridSize, lng + gridSize]], {
-    	        color: 'blue',
-    	        fillColor: 'rgb(184, 183, 255)',
-    	        weight: 0.5,
+    	        color: 'white', // 격자 테두리 색상
+    	        fillColor: fillColor,
+    	        weight: 0.5, 
     	        fillOpacity: 0.5,
-    	        dashArray: '1, 4'
+    	        dashArray: '1, 4' // 격자 점선 '선 길이,선 간격'
     	      });
 
     	      gridLayerGroup.addLayer(rect);
@@ -98,9 +129,15 @@
     	  }
     	}
     
-    /* map.on('click', function(e) {
+    
+    //테스트용 맵 클릭 시 위도 경도 표시 이벤트
+    
+    map.on('click', function(e) {
     	  alert("클릭 위치\n위도: " + e.latlng.lat.toFixed(6) + "\n경도: " + e.latlng.lng.toFixed(6));
-    	}); */
+    	}); 
+    
+    
+    
     
     $('#toggleGridBtn').on('click', function() {
     	  if (gridVisible) {
@@ -207,6 +244,8 @@
     	    .addTo(map);
     	});
     
+    
+    // 아이콘 템플릿
 	  const customIcon2 = L.icon({
   	    iconUrl: '${pageContext.request.contextPath}/resources/image/naver.png', // 사용할 이미지 경로
   	    iconSize: [25, 41], // 이미지 크기 [가로, 세로]
@@ -214,7 +253,7 @@
   	    popupAnchor: [0, -41], // 툴팁 위치 조정
   	  });
 
-  	  L.marker([34.683333, 126.250000], { icon: customIcon2 })
+  	  L.marker([36.289670, 126.361828], { icon: customIcon2 })
   	    .bindTooltip("test", { permanent: false, direction: 'top' })
   	    .on('click', () => {
   	      alert("test");

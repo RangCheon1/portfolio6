@@ -15,18 +15,52 @@
   />
   <style>
   	body{
-  	margin:0;
+  		margin:0;
   	}
     #map {
-      height: 100vh;
-      width: 100%;
+      	height: 100vh;
+      	width: 100%;
     }
+    #loadingSpinner {
+  		position: fixed;
+  		top: 0;
+  		left: 0;
+  		width: 100%;
+  		height: 100%;
+  		background-color: rgba(255,255,255,0.7);
+  		z-index: 2000;
+  		display: none;
+  		justify-content: center;
+  		align-items: center;
+	}
+		
+	.spinner {
+  		border: 8px solid #f3f3f3;
+  		border-top: 8px solid #3498db;
+  		border-radius: 50%;
+  		width: 60px;
+  		height: 60px;
+  		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+  		0% { transform: rotate(0deg); }
+  		100% { transform: rotate(360deg); }
+	}
+	#toggleGridBtn{
+	width:110px;
+	height:36px;
+	font-size:16pt;
+	}
   </style>
 </head>
 <body>
 <button id="toggleGridBtn" style="position: absolute; top: 20px; left: 60px; z-index: 1000;">
-  격자 끄기
+  격자 켜기
 </button>
+<div id="loadingSpinner">
+  <div class="spinner"></div>
+</div>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -60,8 +94,7 @@
 	}).setView([36.5, 128], 8); // 줌레벨 8부터 시작
     	
     
-    let gridLayerGroup = L.layerGroup().addTo(map);
-    let gridVisible = true;
+    
 
     // 타일 레이어 추가 
     L.tileLayer('https://xdworld.vworld.kr/2d/Base/service/{z}/{x}/{y}.png', {
@@ -84,7 +117,7 @@
         style: { opacity:0, fillOpacity: 0 } 
       }).addTo(map);
         
-      drawSeaGrid(); // 모든 polygon이 준비된 후 그리드 그리기
+      
     });
     });
      
@@ -136,18 +169,34 @@
     	  alert("클릭 위치\n위도: " + e.latlng.lat.toFixed(6) + "\n경도: " + e.latlng.lng.toFixed(6));
     	}); 
     
-    
-    
-    
-    $('#toggleGridBtn').on('click', function() {
-    	  if (gridVisible) {
-    	    map.removeLayer(gridLayerGroup);
-    	    $(this).text('격자 켜기');
+    let gridLayerGroup = L.layerGroup()
+    let gridVisible = true;
+    let gridDrawn = false; // 격자가 생성됐는지 여부 추적
+
+    $('#toggleGridBtn').on('click', function () {
+    	  if (!gridDrawn) {
+    		$('#loadingSpinner').css('display','flex');
+    	    $('#loadingSpinner').show(); // 로딩 스피너 표시
+			
+    	    setTimeout(() => {
+    	      drawSeaGrid(); // 격자 최초 생성
+    	      gridDrawn = true;
+    	      map.addLayer(gridLayerGroup);
+    	      $(this).text('격자 끄기');
+    	      gridVisible = true;
+    	      $('#loadingSpinner').hide(); // 로딩 스피너 숨기기
+    	      $('#loadingSpinner').css('display','none');
+    	    }, 100); // 최소 100ms 지연하여 렌더링 타이밍 확보
     	  } else {
-    	    map.addLayer(gridLayerGroup);
-    	    $(this).text('격자 끄기');
+    	    if (gridVisible) {
+    	      map.removeLayer(gridLayerGroup);
+    	      $(this).text('격자 켜기');
+    	    } else {
+    	      map.addLayer(gridLayerGroup);
+    	      $(this).text('격자 끄기');
+    	    }
+    	    gridVisible = !gridVisible;
     	  }
-    	  gridVisible = !gridVisible;
     	});
   	
     

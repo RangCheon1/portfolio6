@@ -16,4 +16,9 @@
 	    public String mapPage1() {
 	        return "map3";
 	    }
+		
+		@GetMapping("/map4")
+	    public String mapPage2() {
+	        return "map4";
+	    }
 	}

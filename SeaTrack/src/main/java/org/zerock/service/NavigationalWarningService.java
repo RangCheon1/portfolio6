@@ -19,12 +19,12 @@ public class NavigationalWarningService {
     private final String serviceKey = "gQ%2BzMvC4WbivI0NoDlqKr%2B98yCXSRd2bDH0Dc8Zhg5R0t9H2tMWbrVru9%2F9nR17q3YadlzAL76LAJt4zXWRrzA%3D%3D";
 
     public List<NavigationalWarningDTO> getWarningList() {
-        String url = baseUrl + "/getNavigationalWarningInfo?serviceKey=" + serviceKey;
+        String url = baseUrl + "/getNavigationalWarningInfo?serviceKey=" + serviceKey  + "&numOfRows=1000";
         return parseXmlToDtoList(url);
     }
 
     public List<NavigationalWarningDTO> getWarningDetail(String docNum) {
-        String url = baseUrl + "/getNavigationalWarningDetailInfo?serviceKey=" + serviceKey + "&doc_num=" + docNum;
+        String url = baseUrl + "/getNavigationalWarningDetailInfo?serviceKey=" + serviceKey + "&doc_num=" + docNum + "&numOfRows=1000";
         return parseXmlToDtoList(url);
     }
 

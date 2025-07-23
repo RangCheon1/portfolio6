@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.ShipMapper">
+
+    <select id="getShipsByUserno" resultType="org.zerock.domain.ShipVO">
+        SELECT * FROM ships WHERE userno = #{userno}
+    </select>
+
+    <insert id="registerShip">
+        INSERT INTO ships (userno, shipname, shiptype, ownername, regdate)
+        VALUES (#{userno}, #{shipname}, #{shiptype}, #{ownername}, NOW())
+    </insert>
+
+    <delete id="deleteShip">
+        DELETE FROM ships WHERE shipno = #{shipno} AND userno = #{userno}
+    </delete>
+
+    <delete id="deleteMultipleShips">
+        DELETE FROM ships 
+        WHERE shipno IN
+        <foreach collection="shipnos" item="shipno" open="(" separator="," close=")">
+            #{shipno}
+        </foreach>
+        AND userno = #{userno}
+    </delete>
+
+    <select id="getShipByShipno" resultType="org.zerock.domain.ShipVO">
+        SELECT * FROM ships WHERE shipno = #{shipno}
+    </select>
+
+    <update id="updateShip">
+        UPDATE ships
+        SET shipname = #{shipname},
+            shiptype = #{shiptype},
+            ownername = #{ownername}
+        WHERE shipno = #{shipno} AND userno = #{userno}
+    </update>
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.AdminUserMapper">
+
+ <!-- 전체 사용자 조회 -->
+<select id="getAllUsers" resultType="org.zerock.domain.UserVO">
+  SELECT userno,
+         userid,
+         username,
+         email,
+         regdate,
+         status,
+         delete_requested_at AS deleteRequestedAt,
+         role
+  FROM users
+  WHERE role != 'admin'
+  ORDER BY regdate DESC
+</select>
+
+<!-- 상태별 사용자 조회 -->
+<select id="getUsersByStatus" parameterType="string" resultType="org.zerock.domain.UserVO">
+  SELECT userno,
+         userid,
+         username,
+         email,
+         regdate,
+         status,
+         delete_requested_at AS deleteRequestedAt,
+         role
+  FROM users
+  WHERE status = #{status}
+    AND role != 'admin'
+  ORDER BY regdate DESC
+</select>
+
+<!-- 특정 사용자 조회 -->
+<select id="getUserByUserno" parameterType="int" resultType="org.zerock.domain.UserVO">
+  SELECT userno,
+         userid,
+         username,
+         userpw,
+         email,
+         regdate,
+         status,
+         delete_requested_at AS deleteRequestedAt,
+         role
+  FROM users
+  WHERE userno = #{userno}
+    AND role != 'admin'
+</select>
+
+<!-- 상태 변경 -->
+<update id="updateUserStatus" parameterType="map">
+  UPDATE users
+  SET status = #{status},
+      delete_requested_at = CASE
+          WHEN #{status} = 'active' THEN NULL
+          ELSE delete_requested_at
+      END
+  WHERE userno = #{userno}
+    AND role != 'admin'
+</update>
+
+<!-- 사용자 삭제 -->
+<delete id="deleteUserByUserno" parameterType="int">
+  DELETE FROM users WHERE userno = #{userno}
+    AND role != 'admin'
+</delete>
+
+<!-- 사용자 정보 수정 -->
+<update id="updateUser" parameterType="org.zerock.domain.UserVO">
+    UPDATE users
+    SET username = #{username},
+        email = #{email}
+    <if test="status != null and status != ''">
+        , status = #{status}
+    </if>
+    WHERE userno = #{userno}
+</update>
+
+
+</mapper>

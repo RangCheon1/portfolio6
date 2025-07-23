@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.UserMapper">
+
+  <insert id="insertUser" parameterType="org.zerock.domain.UserVO">
+    INSERT INTO users (userid, username, userpw, email, status)
+    VALUES (#{userid}, #{username}, #{userpw}, #{email}, 'active')
+  </insert>
+
+  <select id="getUserByUserid" parameterType="string" resultType="org.zerock.domain.UserVO">
+    SELECT * FROM users WHERE userid = #{userid}
+  </select>
+
+  <select id="getUserByUserno" parameterType="int" resultType="org.zerock.domain.UserVO">
+    SELECT * FROM users WHERE userno = #{userno}
+  </select>
+
+  <update id="markUserAsPendingDelete" parameterType="int">
+    UPDATE users SET status = 'pending_delete', delete_requested_at = NOW()
+    WHERE userno = #{userno}
+  </update>
+
+  <update id="cancelPendingDelete" parameterType="int">
+    UPDATE users SET status = 'active', delete_requested_at = NULL
+    WHERE userno = #{userno} AND status = 'pending_delete'
+  </update>
+
+  <select id="getUsersToDelete" resultType="org.zerock.domain.UserVO">
+    SELECT * FROM users
+    WHERE status = 'pending_delete'
+      AND delete_requested_at IS NOT NULL
+      AND delete_requested_at &lt; NOW() - INTERVAL 7 DAY
+  </select>
+
+  <delete id="deleteUserByUserno" parameterType="int">
+    DELETE FROM users WHERE userno = #{userno}
+  </delete>
+
+</mapper>

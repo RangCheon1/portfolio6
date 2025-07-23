@@ -36,7 +36,7 @@ public class KhoaCurrentSpeedController {
         public double getLon() { return lon; }
     }
 
-    // 관측소 전체 리스트 (생략없이 모두 포함)
+    // 관측소 전체 리스트
     private final List<ObsStation> obsStations = Arrays.asList(
         new ObsStation("DT_0063","가덕도",35.024,128.81),
         new ObsStation("DT_0032","강화대교",37.731,126.522),
@@ -138,8 +138,6 @@ public class KhoaCurrentSpeedController {
                 + "&ObsCode=" + URLEncoder.encode(obsCode, "UTF-8")
                 + "&ResultType=json";
 
-        System.out.println("API 호출 URL: " + urlStr);
-
         return httpGet(urlStr);
     }
 
@@ -164,7 +162,6 @@ public class KhoaCurrentSpeedController {
         br.close();
         conn.disconnect();
         
-        System.out.println("KHOA API 원본 JSON 응답:\n" + sb.toString());
 
         return sb.toString();
     }

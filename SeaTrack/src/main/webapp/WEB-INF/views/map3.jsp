@@ -111,6 +111,45 @@
 </head>
 <body>
 
+<!-- 로그인 사용자 이름 표시 -->
+<div style="position:absolute; top:10px; right:10px; padding:8px; z-index:3000;">
+  <c:choose>
+    <c:when test="${not empty sessionScope.user}">
+      <span style="color:#3a61b5; font-weight:bold;">${sessionScope.user.username}</span> 님 환영합니다!
+      <a href="${pageContext.request.contextPath}/user/logout" 
+         style="margin-left:10px; background:#e74c3c; color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none;">
+        로그아웃
+      </a>
+
+      <!-- ✅ 관리자 여부 확인: role 기반 -->
+      <c:choose>
+        <c:when test="${sessionScope.user.role eq 'admin'}">
+          <a href="${pageContext.request.contextPath}/admin/users"
+             style="margin-left:10px; background:#2ecc71; color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none;">
+            관리자 페이지
+          </a>
+        </c:when>
+        <c:otherwise>
+          <a href="${pageContext.request.contextPath}/mypage"
+             style="margin-left:10px; background:#3498db; color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none;">
+            마이페이지
+          </a>
+        </c:otherwise>
+      </c:choose>
+    </c:when>
+    <c:otherwise>
+      <a href="${pageContext.request.contextPath}/user/login" 
+         style="background:#3a61b5; color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none;">
+        로그인
+      </a>
+    </c:otherwise>
+  </c:choose>
+</div>
+
+
+
+
+
 <button id="toggleGridBtn">격자 켜기</button>
 <div id="loadingSpinner"><div class="spinner"></div></div>
 <div id="map"></div>
@@ -124,10 +163,6 @@
     <div class="infoCard" id="infoLeft">
       <h4>교통량 통계</h4>
       <p>내용 로드 중...</p>
-    </div>
-    <div class="infoCard" id="infoCenter">
-      <h4>최근 3일 교통량</h4>
-      <p>내용추가</p>
     </div>
     <div class="infoCard" id="infoRight">
       <h4>해양 날씨 정보</h4>
@@ -185,6 +220,8 @@
       }
     });
   }
+  
+  
 
   function drawSeaGrid() {
     gridLayerGroup.clearLayers();
@@ -286,7 +323,6 @@
 
               $('#infoLeft').html('<h4>교통량 통계</h4>' + contentLeft);
               $('#infoRight').html('<h4>해양 날씨 정보</h4>' + marineInfoHtml);
-              $('#infoCenter').html('<h4>최근 3일 교통량</h4><p>API 연동 준비 중...</p>');
 
               $('#infoBox').fadeIn();
             },
@@ -301,6 +337,10 @@
       }
     }
   }
+  
+  
+  
+  
 
   function loadAllDataAndDrawGrid() {
     $('#loadingSpinner').show();

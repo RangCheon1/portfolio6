@@ -56,20 +56,10 @@ body {
 	font-size: 16pt;
 }
 
-.hourBtnBox {
-	position: fixed;
-	right: 0;
-	top: 0;
-	z-index: 1000;
-	box-sizing: border-box;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center; /* 가로 정렬 */
-	width: 5rem;
-}
-
-.hourBtn {
-	width: 2rem;
+.leaflet-top{
+	position: fixed; !important;
+	right: 5px;
+	top: 4rem;
 }
 </style>
 </head>
@@ -150,7 +140,7 @@ body {
     });
 
     function drawSeaGrid() {
-      const gridSize = 0.02;
+      const gridSize = 0.035;
 
       for (let lat = 32.5; lat < 39.0; lat += gridSize) {
         for (let lng = 122.0; lng < 132.0; lng += gridSize) {
@@ -378,9 +368,9 @@ body {
         return;
       }
 
-      const latlngs = pathCoords.map(p => [p.lat, p.lng]);
+      let latlngs = pathCoords.map(p => [p.lat, p.lng]);
 
-      const polyline = L.polyline(latlngs, {
+      let polyline = L.polyline(latlngs, {
         color: 'blue',
         weight: 4,
         opacity: 0.8

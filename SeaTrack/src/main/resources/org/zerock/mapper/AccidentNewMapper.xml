@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.AccidentNewMapper">
+
+    <select id="selectByGrid" parameterType="map" resultType="org.zerock.domain.AccidentNewVO">
+        SELECT 
+            `사건명` AS accidentName,
+            `사고발생일시` AS accidentDatetime,
+            `사고종류` AS accidentType,
+            `안전사고유형` AS safetyAccidentType,
+            `사망자(명)` AS deaths,
+            `실종자(명)` AS missing,
+            `사망·실종자(명)` AS deathsAndMissing,
+            `부상자(명)` AS injured,
+            `해역` AS seaArea,
+            `선박용도(통계)` AS shipUsageStats,
+            `선박용도(대)` AS shipUsageLarge,
+            `선박용도(중)` AS shipUsageMedium,
+            `선박용도(소)` AS shipUsageSmall,
+            `선박톤수(톤)` AS shipTonnage,
+            `톤수(통계)` AS tonnageStats,
+            `위도(º)` AS latitude,
+            `경도(º)` AS longitude
+        FROM ship_accident
+        WHERE `위도(º)` BETWEEN #{minLat} AND #{maxLat}
+          AND `경도(º)` BETWEEN #{minLng} AND #{maxLng}
+    </select>
+
+</mapper>

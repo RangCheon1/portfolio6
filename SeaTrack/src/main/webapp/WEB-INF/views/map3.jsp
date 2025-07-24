@@ -604,13 +604,14 @@ const ports = [
                 if (accidentList.length === 0) {
                   accidentContent = '<p>사고 없음</p>';
                 } else {
-                  accidentContent = '<div>사고 수: ' + accidentList.length + '건</div><ul>';
+                  accidentContent = '<div>사고 수: ' + accidentList.length + '건</div>';
                   accidentList.forEach(function(a) {
-                    accidentContent += '<li>' + a.accidentDatetime + ' - ' + a.accidentType + ' (' + a.accidentName + ')</li>';
-                    console.log(a.accidentDatetime, a.accidentType, a.accidentName);
+                    accidentContent += '<p>' +
+                      a.accidentDatetime + ' - ' +
+                      a.accidentType + ' (' +
+                      a.accidentName + ')' +
+                    '</p>';
                   });
-                  accidentContent += '</ul>';
-                  console.log(accidentContent);
                 }
               }
 

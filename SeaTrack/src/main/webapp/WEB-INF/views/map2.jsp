@@ -129,19 +129,19 @@
 </button>
 
 <div class='info'>
-<p class='infohead'>aaaa</p>
+<p class='infohead'>교통량</p>
 <table class='infotable'>
 	<tr>
-		<td><div class='colorinfo color1'></div></td><td>0</td>
+		<td><div class='colorinfo color1'></div></td><td>원활</td>
 	</tr>
 	<tr>
-		<td><div class='colorinfo color2'></div></td><td>1</td>
+		<td><div class='colorinfo color2'></div></td><td>보통</td>
 	</tr>
 	<tr>
-		<td><div class='colorinfo color3'></div></td><td>2</td>
+		<td><div class='colorinfo color3'></div></td><td>혼잡</td>
 	</tr>
 	<tr>
-		<td><div class='colorinfo color4'></div></td><td>3</td>
+		<td><div class='colorinfo color4'></div></td><td>매우혼잡</td>
 	</tr>
 </table>
 </div>

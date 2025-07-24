@@ -272,6 +272,70 @@
       justify-content: center;
   	  align-items: center;
     }
+    
+    /* infobox style 추가분 */
+	.info{
+	border: 1px solid #dddddd;
+	border-radius:10px;
+	position: fixed;
+	top:70px;
+	display: flex;
+  	flex-direction: column;
+	left:80vw;
+	background-color:white;
+	width:100px;
+	height:114px;
+	z-index:10000;
+	font-size:9.5pt;
+	box-sizing: border-box;
+	user-select: none;
+  	-webkit-user-select: none; /* Safari */
+  	-moz-user-select: none;    /* Firefox */
+  	-ms-user-select: none;     /* IE10+ */
+	}
+	.infohead{
+	background-color:#d1d1d1;
+	margin:0;
+	padding: 4px 0 4px 10px;
+	border-radius:7px 7px 0px 0px;
+	font-weight: bold;
+	}
+	.colorinfo{
+	width:10px;
+	height:10px;
+	margin:0;
+	padding:0;
+	}
+	.color1{
+	background-color:rgb(101, 211, 67);
+	}
+	.color2{
+	background-color:rgb(235, 255, 51);
+	}
+	.color3{
+	background-color:#ffb74d;
+	}
+	.color4{
+	background-color:#e57373;
+	}
+	.infotable {
+  	width: 100%;
+  	box-sizing: border-box;
+	}
+	.info td {
+  	padding: 0;
+  	line-height:0;
+  	height:18px;
+  	}
+	.info td:first-child {
+  	width: 25%;
+  	padding-left:10px;
+  	text-align:center;
+	}
+	.info td:last-child {
+  	width: 75%;
+  	padding-left:5px
+	}
   </style>
 </head>
 <body>
@@ -314,6 +378,23 @@
 <button id="findRouteBtn">최단 경로 찾기</button>
 </div> <!-- leftBox -->
 
+<div class='info'>
+<p class='infohead'>교통량</p>
+<table class='infotable'>
+	<tr>
+		<td><div class='colorinfo color1'></div></td><td>원활</td>
+	</tr>
+	<tr>
+		<td><div class='colorinfo color2'></div></td><td>보통</td>
+	</tr>
+	<tr>
+		<td><div class='colorinfo color3'></div></td><td>혼잡</td>
+	</tr>
+	<tr>
+		<td><div class='colorinfo color4'></div></td><td>매우혼잡</td>
+	</tr>
+</table>
+</div><!-- info Box -->
 <div id="loadingSpinner"><div class="spinner"></div></div>
 <div id="map"></div>
 
@@ -837,6 +918,35 @@ const ports = [
     $('#endLat').val(lat);
     $('#endLng').val(lng);
   });
+  
+	//info 드래그 이동 기능
+  $(function() {
+	  var isDragging = false;
+	  var offset = { x: 0, y: 0 };
+
+	  $('.info').on('mousedown', function(e) {
+	    isDragging = true;
+	    var infoBox = $('.info');
+	    offset.x = e.clientX - infoBox.offset().left;
+	    offset.y = e.clientY - infoBox.offset().top;
+
+	    // 마우스 이동 이벤트 바인딩
+	    $(document).on('mousemove.dragInfo', function(e) {
+	      if (isDragging) {
+	        $('.info').css({
+	          left: e.clientX - offset.x + 'px',
+	          top: e.clientY - offset.y + 'px'
+	        });
+	      }
+	    });
+
+	    // 마우스 떼면 이벤트 제거
+	    $(document).on('mouseup.dragInfo', function() {
+	      isDragging = false;
+	      $(document).off('.dragInfo'); // .dragInfo 네임스페이스로 등록된 mousemove, mouseup 제거
+	    });
+	  });
+	});
 </script>
 
 </body>

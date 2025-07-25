@@ -148,6 +148,17 @@
 </head>
 <body>
 
+<c:if test="${not empty message}">
+    <script>
+        alert("${message}");
+    </script>
+</c:if>
+<c:if test="${not empty error}">
+    <script>
+        alert("${error}");
+    </script>
+</c:if>
+
 <div class="header-container">
     <h2>마이페이지</h2>
     <a href="${pageContext.request.contextPath}/user/logout" class="btn-logout">로그아웃</a>

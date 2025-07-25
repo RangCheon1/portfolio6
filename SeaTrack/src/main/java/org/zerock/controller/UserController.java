@@ -57,14 +57,17 @@ public class UserController {
 
     // 회원 탈퇴 요청 (유예 상태 변경)
     @PostMapping("/delete")
-    public String requestDelete(HttpSession session) {
+    public String requestDelete(HttpSession session, RedirectAttributes rttr) {
         UserVO user = (UserVO) session.getAttribute("user");
         if (user != null) {
             userService.requestDelete(user.getUserno());
             session.invalidate();  // 로그아웃 처리
+
+            rttr.addFlashAttribute("message", "7일 후 자동으로 탈퇴됩니다. 자동 로그아웃이 진행됩니다.");
         }
         return "redirect:/map3";
     }
+
 
     // 회원 탈퇴 취소 요청
     @PostMapping("/cancelDelete")
